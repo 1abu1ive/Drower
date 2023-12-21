@@ -7,24 +7,20 @@ import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
+import ListItem from "./ListItem";
 import ListItemText from "@mui/material/ListItemText";
-import SettingsIcon from "@mui/icons-material/Settings";
-import GridViewIcon from "@mui/icons-material/GridView";
-import KeyboardCommandKeyIcon from "@mui/icons-material/KeyboardCommandKey";
-import GroupIcon from "@mui/icons-material/Group";
-import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
 import CropIcon from "@mui/icons-material/Crop";
-import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
-import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 const drawerWidth = 240;
-import rasim from "./rasim.png";
+import avatar from "./Photo/avatar.png";
+import bell from "./Photo/bell.png";
+import search from "./Photo/search.png";
 import Image from "next/image";
+import { Container, ListItemIcon } from "@mui/material";
+import menu from "./menu";
+import { useRouter } from "next/router";
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
   ({ theme, open }) => ({
     flexGrow: 1,
@@ -70,7 +66,10 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-end",
 }));
 
-export default function PersistentDrawerLeft() {
+export default function PersistentDrawerLeft({ children }) {
+  const router = useRouter();
+
+  console.log(router);
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
 
@@ -95,7 +94,39 @@ export default function PersistentDrawerLeft() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div"></Typography>
+          <Typography
+            variant="div  "
+            noWrap
+            component={"div"}
+            sx={{
+              color: "black",
+              display: "flex",
+            }}
+          >
+            <div>
+              <h4>Good Morning Anima</h4>
+              <p
+                style={{ fontSize: "10px", color: "gray", marginTop: "-20px" }}
+              >
+                Hope you have a good day
+              </p>
+            </div>
+            <div style={{ marginLeft: "900px", display: "flex" }}>
+              <div style={{ marginTop: "25px" }}>
+                <Image src={search} alt="Picture of the author" />
+                <Image
+                  src={bell}
+                  alt="Picture of the author"
+                  style={{ marginLeft: "10px" }}
+                />
+              </div>
+              <Image
+                src={avatar}
+                alt="Picture of the author"
+                style={{ marginLeft: "10px", marginTop: "10px" }}
+              />
+            </div>
+          </Typography>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -133,73 +164,34 @@ export default function PersistentDrawerLeft() {
             )}
           </IconButton>
         </DrawerHeader>
-
-        <List sx={{ color: "gray", marginLeft: "10px" }}>
-          <ListItem
-            disablePadding
-            sx={{ color: "#6956E5", fontSize: "18px", fontWeight: "bold" }}
-          >
-            <ListItemButton>
-              <GridViewIcon />
-              <span style={{ marginLeft: "10px" }}>Dashboard</span>
-              <ListItemText />
-            </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding sx={{ marginTop: "10px" }}>
-            <ListItemButton>
-              <KeyboardCommandKeyIcon />
-              <span style={{ marginLeft: "10px" }}>Teams</span>
-              <ListItemText />
-            </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding sx={{ marginTop: "10px" }}>
-            <ListItemButton>
-              <GroupIcon />
-              <span style={{ marginLeft: "10px" }}>Employees</span>
-              <ListItemText />
-            </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding sx={{ marginTop: "10px" }}>
-            <ListItemButton>
-              <WorkOutlineIcon />
-              <span style={{ marginLeft: "10px" }}>Projects</span>
-              <ListItemText />
-            </ListItemButton>
-          </ListItem>
-        </List>
-        <Divider />
-        <List sx={{ color: "gray", marginLeft: "10px" }}>
-          <ListItem disablePadding sx={{ marginTop: "10px" }}>
-            <ListItemButton>
-              <LocalPhoneIcon />
-              <span style={{ marginLeft: "10px" }}>Meetings</span>
-              <ListItemText />
-            </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding sx={{ marginTop: "10px" }}>
-            <ListItemButton>
-              <FolderOpenIcon />
-              <span style={{ marginLeft: "10px" }}>Tasks</span>
-              <ListItemText />
-            </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding sx={{ marginTop: "10px" }}>
-            <ListItemButton>
-              <SettingsIcon />
-              <span style={{ marginLeft: "10px" }}>Settings</span>
-              <ListItemText />
-            </ListItemButton>
-          </ListItem>
-          <br />
-          <br />
-          <Image src={rasim} alt="Picture of the author" />
+        <List sx={{ mt: 2 }}>
+          {menu.map((item, index) => (
+            <ListItem
+              button
+              key={item.title}
+              className={
+                (router.pathname.startsWith(item.path) && item.path !== "/") ||
+                router.pathname === item.path
+                  ? "active"
+                  : ""
+              }
+              onClick={() => router.push(item.path)}
+            >
+              <ListItemIcon>{item.icon}</ListItemIcon>
+              <ListItemText primary={item.title} />
+            </ListItem>
+          ))}
         </List>
       </Drawer>
+      <Container>
+        <br />
 
-      <Main open={open}>
-        <DrawerHeader />
-        <Typography paragraph></Typography>
-      </Main>
+        <Main open={open}>
+          <DrawerHeader />
+          {children}
+          <p></p>
+        </Main>
+      </Container>
     </Box>
   );
 }
