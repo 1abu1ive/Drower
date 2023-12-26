@@ -15,8 +15,7 @@ export default function Body() {
         <Typography paragraph sx={{ display: "flex" }}>
             <Typography variant="div" component={"div"}>
               <Typography
-                variant="div"
-                component={"div"}
+                 component={"div"}
                 sx={{ color: "#23262F", gap: "10px", display: "flex" }}
               >
                 <Typography
